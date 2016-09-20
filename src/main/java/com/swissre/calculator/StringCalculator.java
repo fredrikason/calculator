@@ -18,7 +18,8 @@ public class StringCalculator {
                 int number = Integer.parseInt(token.value);
                 if (number < 0)
                     throw new RuntimeException("Negative numbers are not supported");
-                result += number;
+                if (number <= 100)
+                    result += number;
             }
         }
         return result;
@@ -67,14 +68,11 @@ public class StringCalculator {
 
             Matcher matcher = pattern.matcher(input);
             while (matcher.find()) {
-                if (matcher.group(TokenType.NUMBER.name()) != null) {
-                    String number = matcher.group(TokenType.NUMBER.name());
-                    if (Integer.parseInt(number) <= 100)
-                        tokens.add(new Token(TokenType.NUMBER, number));
-                    continue;
-                } else if (matcher.group(TokenType.DELIMITER.name()) != null) {
-                    tokens.add(new Token(TokenType.DELIMITER, matcher.group(TokenType.DELIMITER.name())));
-                    continue;
+                for (TokenType type: TokenType.values()) {
+                    if (matcher.group(type.name()) != null) {
+                        tokens.add(new Token(type, matcher.group(type.name())));
+                        break;
+                    }
                 }
             }
 
